@@ -1,0 +1,12 @@
+---
+description: Conventions for battery storage, dispatch, load and energy-market modelling code
+globs: **/*.py,**/*.ipynb
+alwaysApply: false
+---
+- Timestamps are timezone-aware (default `Europe/Budapest` unless the data says otherwise). A 1-minute series stays 1-minute; resampling is explicit and states the aggregation (mean power vs. summed energy).
+- Every series carries a unit (kW, kWh, EUR/MWh, %). Put it in the name or metadata (`load_kw`, `price_eur_per_mwh`). Money and energy never share a column; convert kW to kWh with the interval length, never implicitly.
+- State of charge, power limits, round-trip efficiency, and degradation are constraints, not parameters to tune away to make results look better.
+- No lookahead: a decision at time `t` may only use data available at `t`.
+- ROI/NPV functions take the price series, horizon, and discount rate as explicit arguments and say so in their signature.
+- A change to a cash-flow or dispatch result updates or adds a numeric test with a fixed fixture.
+- Customer load curves and commercial results are sensitive: never commit raw data, log it, or send it to third-party services.

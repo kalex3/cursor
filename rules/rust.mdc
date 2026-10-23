@@ -1,0 +1,10 @@
+---
+description: Rust conventions
+globs: **/*.rs,**/Cargo.toml
+alwaysApply: false
+---
+- Keep `cargo fmt` and `cargo clippy -- -D warnings` clean.
+- Use `Result` and `?`; libraries use `thiserror`, binaries may use `anyhow`. No `unwrap()`/`expect()` outside tests unless an invariant is documented.
+- Prefer borrowing over cloning; justify every `clone()` on a hot path.
+- Every `unsafe` block gets a `// SAFETY:` comment stating the invariant it relies on.
+- Unit tests in the same file under `#[cfg(test)]`, integration tests in `tests/`.

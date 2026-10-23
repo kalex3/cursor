@@ -1,0 +1,11 @@
+---
+description: TypeScript + React (Vite) conventions
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
+---
+<!-- Condensed from PatrickJS/awesome-cursorrules (CC0-1.0): typescript-nodejs-react-vite -->
+- `strict` TypeScript; no `any` (use `unknown` and narrow). Prefer `type` aliases and discriminated unions over enums.
+- Function components and hooks only; keep components small and derive state instead of duplicating it.
+- Fetch data with a single data layer (e.g. TanStack Query), not ad-hoc `useEffect`.
+- Use the test runner the repo already has (Vitest or Jest, never both); test behaviour via the DOM, not implementation details.
+- Don't add UI libraries or CSS frameworks unless the repo already uses them.

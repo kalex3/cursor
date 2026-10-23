@@ -1,0 +1,11 @@
+---
+description: Model selection and validation for time series (prices, load, forecasts)
+globs: **/*.py,**/*.ipynb
+alwaysApply: false
+---
+<!-- Distilled from the validation section of PatrickJS/awesome-cursorrules (CC0-1.0): automl-hyperparameter-optimization -->
+- Split by time (walk-forward / `TimeSeriesSplit`); never shuffle across time.
+- Fit scalers, encoders and imputers on the training fold only.
+- Always report a naive baseline (persistence / seasonal-naive) next to any model.
+- Report error in physical units (kW, EUR/MWh) as well as relative metrics; check errors by hour-of-day and season.
+- Use this for forecasting and model selection only, not as a replacement for the physical battery model.

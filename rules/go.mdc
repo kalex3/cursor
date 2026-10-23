@@ -1,0 +1,10 @@
+---
+description: Go conventions
+globs: **/*.go,**/go.mod
+alwaysApply: false
+---
+- Standard library first; add a dependency only with a concrete need. Format with `gofmt`; keep `go vet ./...` clean.
+- Return errors, wrapping with `fmt.Errorf("doing x: %w", err)`; no panics for expected failures.
+- Pass `context.Context` as the first parameter of anything that does I/O or blocks.
+- Table-driven tests in `_test.go` files next to the code; run with `-race`.
+- Keep interfaces small and define them where they are used.

@@ -1,0 +1,10 @@
+---
+description: Shell script conventions
+globs: **/*.sh,**/*.bash
+alwaysApply: false
+---
+- Bash scripts start with `#!/usr/bin/env bash` and `set -euo pipefail`; scripts meant for OpenBSD/BSD use `#!/bin/sh` and POSIX only (no bashisms, check `sh -n`).
+- Quote every expansion (`"$var"`, `"${arr[@]}"`); use `[[ ]]` in bash, `[ ]` in POSIX sh.
+- Use `mktemp` plus `trap cleanup EXIT`; never write predictable files in `/tmp`.
+- Don't parse `ls`; use globs or `find -print0 | xargs -0`.
+- Check with `shellcheck` when available and don't suppress warnings without a comment saying why.

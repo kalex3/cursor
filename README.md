@@ -24,6 +24,7 @@ The container runs as UID 1000 (`cursor`). To persist login/config between runs,
 
 `compose.yaml` is a ready-to-use example: it pulls the prebuilt image from GHCR, mounts `./workspace` at `/workspace`,
 mounts [`./rules`](rules) read-only at `/workspace/.cursor/rules` (Cursor rules the agent picks up automatically),
+mounts [`./agents`](agents) read-only at `/workspace/.cursor/agents` (custom subagents),
 and persists login/state in named volumes.
 
 ```sh
@@ -31,7 +32,11 @@ export CURSOR_API_KEY=...
 docker compose run --rm cursor
 ```
 
-Edit or add `.mdc` files in `rules/` to give the agent project conventions; `rules/container.mdc` describes the container environment.
+Edit or add `.mdc` files in `rules/` and `.md` files in `agents/` to taste. Rules are kept small on purpose:
+only the behaviour rules (`anti-sycophancy`, `anti-overengineering`) and `container` always apply; the rest attach by file glob
+(Python/pandas, pytest, energy modelling, time-series validation, security, shell, Go, Rust, TypeScript/React, Docker).
+Some are adapted from [awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules) (CC0-1.0).
+Subagents: `verifier`, `code-reviewer`, `security-auditor`, `model-auditor`, `test-writer`, `shell-reviewer`.
 
 ### Build locally
 

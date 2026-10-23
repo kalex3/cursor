@@ -1,0 +1,12 @@
+---
+description: Baseline application-security rules
+globs: **/*.py,**/*.go,**/*.rs,**/*.ts,**/*.tsx,**/*.js,**/*.sh
+alwaysApply: false
+---
+<!-- Trimmed from PatrickJS/awesome-cursorrules (CC0-1.0): security-devsecops-ssdls-appsec -->
+- No hardcoded secrets, tokens or keys; read them from the environment. Never print or log them.
+- Parameterized queries only; never build SQL/shell commands by string concatenation.
+- Validate and bound all external input; verify webhook signatures with constant-time comparison.
+- Least privilege for files, tokens, containers and network access.
+- No `eval`/`exec` on untrusted data, no `shell=True`, no disabling TLS verification.
+- Prefer maintained dependencies, pin versions, and mention any new dependency in your answer.

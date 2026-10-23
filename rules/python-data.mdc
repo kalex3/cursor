@@ -1,0 +1,13 @@
+---
+description: pandas/numpy analysis and notebook conventions
+globs: **/*.py,**/*.ipynb
+alwaysApply: false
+---
+<!-- Condensed from PatrickJS/awesome-cursorrules (CC0-1.0): pandas-scikit-learn-guide -->
+- Prefer vectorized pandas/numpy over Python loops; use method chaining for transformations.
+- Select explicitly with `.loc` / `.iloc`; never rely on chained indexing.
+- Run data-quality checks first: dtypes, ranges, duplicates, gaps in the index, missing values. Decide explicitly between drop, impute, or flag.
+- Use descriptive column names that include the unit (see `energy-modelling.mdc`).
+- Plots have title, axis labels with units, and a legend; use colour-blind-safe palettes.
+- Notebooks run top to bottom from a clean kernel; keep code cells small and put reusable logic in importable modules.
+- Use `uv` for environments and dependencies; don't `pip install` into the system interpreter.

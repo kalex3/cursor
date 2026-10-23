@@ -21,8 +21,10 @@ services:
       # Your project (read-write).
       - ./workspace:/workspace
       # Rules from this repo, mounted read-only so the agent can't modify them.
-      # Compose creates an empty .cursor/rules in the workspace as the mount point.
+      # Compose creates empty .cursor/rules and .cursor/agents dirs in the workspace as mount points.
       - ./rules:/workspace/.cursor/rules:ro
+      # Custom subagents from this repo (read-only too).
+      - ./agents:/workspace/.cursor/agents:ro
       # Persist agent login/config/state between runs.
       - cursor-state:/home/cursor/.cursor
       - cursor-config:/home/cursor/.config/cursor
