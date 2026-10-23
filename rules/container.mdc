@@ -7,7 +7,7 @@ alwaysApply: true
 
 - You are running inside a minimal Debian container as the non-root user `cursor` (UID 1000).
 - The project is mounted at `/workspace`; only changes under `/workspace` persist.
-- Available tools: `git`, `curl`, `ssh`. Anything else (compilers, language runtimes, package managers) is **not** installed.
+- Available tools: `git`, `curl`, `jq`, `ssh`. Anything else (compilers, language runtimes, package managers) is **not** installed.
   Don't try to `sudo` or install system packages; tell the user what is missing instead.
 - Don't commit, push, or run destructive git commands unless explicitly asked.
 

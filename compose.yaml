@@ -8,6 +8,7 @@ services:
   cursor:
     image: ghcr.io/kalex3/cursor:latest # pin the agent version (e.g. :2026.10.22-27dcf5f) or a digest for reproducibility
     pull_policy: always
+    init: true # tini as PID 1: forwards signals and reaps zombie processes
     stdin_open: true
     tty: true
     working_dir: /workspace

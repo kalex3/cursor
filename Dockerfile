@@ -77,6 +77,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         ca-certificates \
         curl \
         git \
+        jq \
         openssh-client \
     && useradd --create-home --uid 1000 --shell /bin/bash cursor \
     && install -d -o cursor -g cursor /workspace
