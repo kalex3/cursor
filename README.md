@@ -12,10 +12,10 @@ Run the [Cursor Agent CLI](https://cursor.com/cli) in a lightweight, non-root De
 docker run --rm -it \
   -e CURSOR_API_KEY \
   -v "$PWD":/workspace -w /workspace \
-  ghcr.io/kalex3/cursor:edge
+  ghcr.io/kalex3/cursor:latest
 ```
 
-Arguments are passed to `agent`, e.g. `... ghcr.io/kalex3/cursor:edge -p "explain this repo"`.
+Arguments are passed to `agent`, e.g. `... ghcr.io/kalex3/cursor:latest -p "explain this repo"`.
 
 The container runs as UID 1000 (`cursor`). To persist login/config between runs, mount a volume at `/home/cursor/.cursor`
 (and `/home/cursor/.config/cursor`). Files created in a bind mount are owned by UID 1000.
