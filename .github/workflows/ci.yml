@@ -56,15 +56,22 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Read pinned Cursor Agent version
+        id: agent
+        run: echo "version=$(sed -n 's/^ARG CURSOR_AGENT_VERSION=//p' Dockerfile)" >> "$GITHUB_OUTPUT"
+
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          # `latest` always tracks the default branch; release tags only add version tags.
+          # `latest` and the agent-version tag (e.g. 2026.10.22-27dcf5f) track the default branch;
+          # the agent-version tag moves when only the base image or packages change.
+          # Release tags (v*) only add semver tags.
           flavor: latest=false
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ steps.agent.outputs.version }},enable={{is_default_branch}}
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=ref,event=pr
