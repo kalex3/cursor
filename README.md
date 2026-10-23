@@ -33,9 +33,14 @@ For fully reproducible setups pin by digest (`ghcr.io/kalex3/cursor@sha256:...`)
 ### Docker Compose and rules
 
 `compose.yaml` is a ready-to-use example: it pulls the prebuilt image from GHCR, mounts `./workspace` at `/workspace`,
-mounts [`./rules`](rules) read-only at `/workspace/.cursor/rules` (Cursor rules the agent picks up automatically),
-mounts [`./agents`](agents) read-only at `/workspace/.cursor/agents` (custom subagents),
-and persists login/state in named volumes.
+mounts [`./rules`](rules) at `~/.cursor/rules` and [`./agents`](agents) at `~/.cursor/agents` (user-level rules and subagents,
+so they apply to every project and don't touch the workspace), and persists login/state in named volumes.
+
+The rules and agents mounts are **read-write** so the agent can maintain them; the git repo is your backup
+(`git diff` to review, `git checkout -- rules agents` to restore). If you'd rather not allow that, add `:ro` to both mounts:
+rules apply to every future session, so text injected into one session (from a file or web page) could otherwise persist there.
+
+The image itself ships `container.mdc` (what's installed in the container) as a user-level rule, so it also applies with a plain `docker run`.
 
 ```sh
 export CURSOR_API_KEY=...
