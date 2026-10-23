@@ -20,6 +20,17 @@ Arguments are passed to `agent`, e.g. `... ghcr.io/kalex3/cursor:latest -p "expl
 The container runs as UID 1000 (`cursor`). To persist login/config between runs, mount a volume at `/home/cursor/.cursor`
 (and `/home/cursor/.config/cursor`). Files created in a bind mount are owned by UID 1000.
 
+### Tags
+
+| Tag | Meaning |
+| --- | --- |
+| `latest` | Latest build of `main` |
+| `<agent-version>` (e.g. `2026.10.22-27dcf5f`) | Build of `main` with that Cursor Agent version; refreshed if only the base image changes |
+| `sha-<commit>` | Immutable build of a specific commit |
+| `X.Y.Z`, `X.Y` | Git release tags (`vX.Y.Z`) |
+
+For fully reproducible setups pin by digest (`ghcr.io/kalex3/cursor@sha256:...`).
+
 ### Docker Compose and rules
 
 `compose.yaml` is a ready-to-use example: it pulls the prebuilt image from GHCR, mounts `./workspace` at `/workspace`,

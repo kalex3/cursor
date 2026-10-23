@@ -6,7 +6,7 @@
 #
 services:
   cursor:
-    image: ghcr.io/kalex3/cursor:latest # for reproducibility pin a version tag (e.g. :1.2.3) or a digest
+    image: ghcr.io/kalex3/cursor:latest # pin the agent version (e.g. :2026.10.22-27dcf5f) or a digest for reproducibility
     pull_policy: always
     stdin_open: true
     tty: true
