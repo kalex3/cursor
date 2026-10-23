@@ -11,7 +11,7 @@ Run the [Cursor Agent CLI](https://cursor.com/cli) in a lightweight, non-root De
 ```sh
 docker run --rm -it \
   -e CURSOR_API_KEY \
-  -v "$PWD":/workspace -w /workspace \
+  -v "$PWD":/workspace \
   ghcr.io/kalex3/cursor:latest
 ```
 
@@ -62,15 +62,15 @@ docker run --rm cursor --version
 | --- | --- |
 | Base image | `debian:13.7-slim` + digest (Dependabot) |
 | Dockerfile frontend | `docker/dockerfile` tag + digest |
-| Cursor Agent CLI | Exact version + per-arch SHA-256, verified at build time |
+| Cursor Agent CLI | Exact version + per-arch SHA-256, verified at build time; also published as an image tag |
 | GitHub Actions | Full commit SHAs (Dependabot) |
 | apt packages | Not pinned (Debian drops old versions); reproducibility comes from the base digest |
 
 ## Automation
 
-- **CI** (`ci.yml`): hadolint, multi-arch (amd64/arm64) build with GHA layer cache, SBOM and provenance attestations; pushes to GHCR on `main` and `v*` tags.
+- **CI** (`ci.yml`): hadolint, multi-arch (amd64/arm64) build with GHA layer cache, SBOM and provenance attestations. Pushes to GHCR on `main` (`latest`, `<agent-version>`, `sha-<commit>`) and on `v*` tags (`X.Y.Z`, `X.Y`); pull requests only build and smoke-test.
 - **Dependabot**: weekly updates for the Docker base image and GitHub Actions.
-- **Update Cursor Agent** (`update-cursor-agent.yml`): daily check of the latest release; opens a PR bumping the version and checksums via `scripts/update-cursor-agent.sh`.
+- **Update Cursor Agent** (`update-cursor-agent.yml`): daily check of the latest release; opens a PR bumping the version and checksums via `scripts/update-cursor-agent.sh`. Merging it publishes a new `<agent-version>` tag.
 
 ## Layer caching
 
