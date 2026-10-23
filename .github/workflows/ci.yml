@@ -85,5 +85,5 @@ jobs:
       - name: Smoke test
         if: github.event_name == 'pull_request'
         run: |
-          docker buildx build --load --platform linux/amd64 -t cursor-docker:ci .
-          docker run --rm cursor-docker:ci --version
+          docker buildx build --load --platform linux/amd64 -t cursor:ci .
+          docker run --rm cursor:ci --version

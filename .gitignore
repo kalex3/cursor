@@ -1,3 +1,5 @@
 .env
 *.tar
 *.tar.gz
+workspace/*
+!workspace/README.md
