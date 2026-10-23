@@ -1,6 +1,6 @@
 # Example: run Cursor Agent against a local workspace.
 #
-#   export CURSOR_API_KEY=...          # or put it in a .env file next to this one
+#   cp .env.example .env               # then set CURSOR_API_KEY (or `export CURSOR_API_KEY=...`)
 #   docker compose run --rm cursor     # interactive session
 #   docker compose run --rm cursor -p "explain this repo"
 #
@@ -17,7 +17,9 @@ services:
     # (and export UID/GID first, e.g. `export UID GID=$(id -g)`).
     # user: "${UID}:${GID}"
     environment:
-      CURSOR_API_KEY: ${CURSOR_API_KEY:-}
+      # Passed through from your shell or from .env (see .env.example); not set in the container if undefined.
+      CURSOR_API_KEY:
+      NO_OPEN_BROWSER: ${NO_OPEN_BROWSER:-1}
     volumes:
       # Your project (read-write).
       - ./workspace:/workspace
