@@ -49,7 +49,7 @@ rm -r proposals/rules/some-rule.mdc                                 # discard
 The image itself ships `container.mdc` (what's installed in the container) as a user-level rule, so it also applies with a plain `docker run`.
 
 ```sh
-export CURSOR_API_KEY=...
+cp .env.example .env   # set CURSOR_API_KEY (Dashboard -> API Keys), or leave it and run `agent login` in the container
 docker compose run --rm cursor
 ```
 
