@@ -3,3 +3,5 @@
 *.tar.gz
 workspace/*
 !workspace/README.md
+proposals/*
+!proposals/README.md

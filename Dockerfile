@@ -99,7 +99,7 @@ WORKDIR /workspace
 
 # Mirror the layout created by the official installer (agent + cursor-agent symlinks).
 # Also pre-create state dirs owned by `cursor` so named volumes mounted there are writable.
-RUN mkdir -p ~/.local/bin ~/.cursor/rules ~/.cursor/agents ~/.config/cursor \
+RUN mkdir -p ~/.local/bin ~/.cursor/rules ~/.cursor/agents ~/proposals ~/.config/cursor \
     && ln -s ../share/cursor-agent/versions/current/cursor-agent ~/.local/bin/agent \
     && ln -s ../share/cursor-agent/versions/current/cursor-agent ~/.local/bin/cursor-agent
 
