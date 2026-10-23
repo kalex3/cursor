@@ -21,11 +21,11 @@ services:
     volumes:
       # Your project (read-write).
       - ./workspace:/workspace
-      # Rules from this repo, mounted read-only so the agent can't modify them.
-      # Compose creates empty .cursor/rules and .cursor/agents dirs in the workspace as mount points.
-      - ./rules:/workspace/.cursor/rules:ro
-      # Custom subagents from this repo (read-only too).
-      - ./agents:/workspace/.cursor/agents:ro
+      # User-level rules and subagents (apply to every project), mounted from this repo.
+      # Read-write so the agent can maintain them itself; the repo is the backup (`git diff` / `git checkout -- rules agents`).
+      # Safer alternative: append `:ro`, so the agent can't change them (and prompt-injected text can't persist in them).
+      - ./rules:/home/cursor/.cursor/rules
+      - ./agents:/home/cursor/.cursor/agents
       # Persist agent login/config/state between runs.
       - cursor-state:/home/cursor/.cursor
       - cursor-config:/home/cursor/.config/cursor

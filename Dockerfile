@@ -99,9 +99,13 @@ WORKDIR /workspace
 
 # Mirror the layout created by the official installer (agent + cursor-agent symlinks).
 # Also pre-create state dirs owned by `cursor` so named volumes mounted there are writable.
-RUN mkdir -p ~/.local/bin ~/.cursor ~/.config/cursor \
+RUN mkdir -p ~/.local/bin ~/.cursor/rules ~/.cursor/agents ~/.config/cursor \
     && ln -s ../share/cursor-agent/versions/current/cursor-agent ~/.local/bin/agent \
     && ln -s ../share/cursor-agent/versions/current/cursor-agent ~/.local/bin/cursor-agent
+
+# Describes this image to the agent as a user-level rule (~/.cursor/rules is read for all projects).
+# Single source of truth: the same file is what the compose example mounts over this directory.
+COPY --chown=1000:1000 rules/container.mdc /home/cursor/.cursor/rules/container.mdc
 
 ENV PATH="/home/cursor/.local/bin:${PATH}"
 
