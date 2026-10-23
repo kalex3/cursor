@@ -85,6 +85,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         openssh-client \
         patch \
         procps \
+        pup \
         python3 \
         tree \
         unzip \
