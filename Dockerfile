@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.28@sha256:bb22d9815c728170f72750f4e5b0d672e06176142e1d602c7e66c050100b7e5b
 
 # Version + checksums are bumped by scripts/update-cursor-agent.sh
-# (run weekly by .github/workflows/update-cursor-agent.yml).
+# (run daily by .github/workflows/update-cursor-agent.yml).
 ARG CURSOR_AGENT_VERSION=2026.10.22-27dcf5f
 ARG CURSOR_AGENT_SHA256_X64=85296944e4600a83c4b764f578d1502bf9c416db200d33a593e8f3ecabfdc294
 ARG CURSOR_AGENT_SHA256_ARM64=22a36df9720830668ccd4d707e5190204ab9c8a0efb2f068cc914895f804d3ec
