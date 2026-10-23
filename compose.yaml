@@ -22,10 +22,12 @@ services:
       # Your project (read-write).
       - ./workspace:/workspace
       # User-level rules and subagents (apply to every project), mounted from this repo.
-      # Read-write so the agent can maintain them itself; the repo is the backup (`git diff` / `git checkout -- rules agents`).
-      # Safer alternative: append `:ro`, so the agent can't change them (and prompt-injected text can't persist in them).
-      - ./rules:/home/cursor/.cursor/rules
-      - ./agents:/home/cursor/.cursor/agents
+      # Read-only: the agent can't change them, so injected text can't persist in them.
+      - ./rules:/home/cursor/.cursor/rules:ro
+      - ./agents:/home/cursor/.cursor/agents:ro
+      # Writable inbox where the agent proposes new/changed rules and agents (see proposals/README.md).
+      # You review and merge by hand: `diff -ru rules proposals/rules`.
+      - ./proposals:/home/cursor/proposals
       # Persist agent login/config/state between runs.
       - cursor-state:/home/cursor/.cursor
       - cursor-config:/home/cursor/.config/cursor
