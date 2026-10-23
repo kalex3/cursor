@@ -78,24 +78,26 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         curl \
         git \
         openssh-client \
-    && useradd --create-home --uid 1000 --shell /bin/bash cursor
+    && useradd --create-home --uid 1000 --shell /bin/bash cursor \
+    && install -d -o cursor -g cursor /workspace
 
 COPY --from=fetch --chown=cursor:cursor /opt/cursor-agent /home/cursor/.local/share/cursor-agent/versions
 
 USER 1000:1000
-WORKDIR /home/cursor
+WORKDIR /workspace
 
 # Mirror the layout created by the official installer (agent + cursor-agent symlinks).
-RUN mkdir -p .local/bin \
-    && ln -s ../share/cursor-agent/versions/current/cursor-agent .local/bin/agent \
-    && ln -s ../share/cursor-agent/versions/current/cursor-agent .local/bin/cursor-agent
+# Also pre-create state dirs owned by `cursor` so named volumes mounted there are writable.
+RUN mkdir -p ~/.local/bin ~/.cursor ~/.config/cursor \
+    && ln -s ../share/cursor-agent/versions/current/cursor-agent ~/.local/bin/agent \
+    && ln -s ../share/cursor-agent/versions/current/cursor-agent ~/.local/bin/cursor-agent
 
 ENV PATH="/home/cursor/.local/bin:${PATH}"
 
 ARG CURSOR_AGENT_VERSION
-LABEL org.opencontainers.image.title="cursor-docker" \
+LABEL org.opencontainers.image.title="cursor" \
       org.opencontainers.image.description="Cursor Agent CLI in a lightweight Debian container" \
-      org.opencontainers.image.source="https://github.com/kalex3/cursor-docker" \
+      org.opencontainers.image.source="https://github.com/kalex3/cursor" \
       org.opencontainers.image.licenses="MIT" \
       io.cursor.agent.version="${CURSOR_AGENT_VERSION}"
 

@@ -1,0 +1,32 @@
+# Example: run Cursor Agent against a local workspace.
+#
+#   export CURSOR_API_KEY=...          # or put it in a .env file next to this one
+#   docker compose run --rm cursor     # interactive session
+#   docker compose run --rm cursor -p "explain this repo"
+#
+services:
+  cursor:
+    image: ghcr.io/kalex3/cursor:edge # pin a version tag (e.g. :1.2.3) or digest for reproducibility
+    pull_policy: always
+    stdin_open: true
+    tty: true
+    working_dir: /workspace
+    # The image runs as UID 1000. If your host UID differs, files in the
+    # workspace will be owned by 1000; uncomment to match your host user
+    # (and export UID/GID first, e.g. `export UID GID=$(id -g)`).
+    # user: "${UID}:${GID}"
+    environment:
+      CURSOR_API_KEY: ${CURSOR_API_KEY:-}
+    volumes:
+      # Your project (read-write).
+      - ./workspace:/workspace
+      # Rules from this repo, mounted read-only so the agent can't modify them.
+      # Compose creates an empty .cursor/rules in the workspace as the mount point.
+      - ./rules:/workspace/.cursor/rules:ro
+      # Persist agent login/config/state between runs.
+      - cursor-state:/home/cursor/.cursor
+      - cursor-config:/home/cursor/.config/cursor
+
+volumes:
+  cursor-state:
+  cursor-config:

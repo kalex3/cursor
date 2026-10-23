@@ -1,0 +1,18 @@
+---
+description: Environment notes for running inside the cursor container
+alwaysApply: true
+---
+
+# Container environment
+
+- You are running inside a minimal Debian container as the non-root user `cursor` (UID 1000).
+- The project is mounted at `/workspace`; only changes under `/workspace` persist.
+- Available tools: `git`, `curl`, `ssh`. Anything else (compilers, language runtimes, package managers) is **not** installed.
+  Don't try to `sudo` or install system packages; tell the user what is missing instead.
+- Don't commit, push, or run destructive git commands unless explicitly asked.
+
+# Project conventions
+
+<!-- Replace with your own rules: code style, test commands, directories to avoid, etc. -->
+- Keep changes small and focused.
+- Match the existing code style of the files you edit.
