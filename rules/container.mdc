@@ -7,7 +7,7 @@ alwaysApply: true
 
 - You are running inside a minimal Debian container as the non-root user `cursor` (UID 1000).
 - The project is mounted at `/workspace`; only changes under `/workspace` persist.
-- Available tools: `git`, `curl`, `jq`, `ssh`, `python3` (standard library only), and basic utilities
+- Available tools: `git`, `curl`, `jq`, `ssh`, `pup` (CSS-selector HTML parser, e.g. `curl -s URL | pup 'a attr{href}'`), `python3` (standard library only), and basic utilities
   (`less`, `file`, `tree`, `diff`, `patch`, `find`, `unzip`, `xz`, `ps`).
   There is no `pip`, `uv`, venv support, compilers, or other language runtimes, and the container has no `sudo`.
   Use the Python standard library for throwaway scripts; if something else is needed, tell the user instead of trying to install it.
