@@ -27,7 +27,6 @@ The container runs as UID 1000 (`cursor`). To persist login/config between runs,
 | `latest` | Latest build of `main` |
 | `<agent-version>` (e.g. `2026.10.22-27dcf5f`) | Build of `main` with that Cursor Agent version; refreshed if only the base image changes |
 | `sha-<commit>` | Immutable build of a specific commit |
-| `X.Y.Z`, `X.Y` | Git release tags (`vX.Y.Z`) |
 
 For fully reproducible setups pin by digest (`ghcr.io/kalex3/cursor@sha256:...`).
 
@@ -68,7 +67,7 @@ docker run --rm cursor --version
 
 ## Automation
 
-- **CI** (`ci.yml`): hadolint, multi-arch (amd64/arm64) build with GHA layer cache, SBOM and provenance attestations. Pushes to GHCR on `main` (`latest`, `<agent-version>`, `sha-<commit>`) and on `v*` tags (`X.Y.Z`, `X.Y`); pull requests only build and smoke-test.
+- **CI** (`ci.yml`): hadolint, multi-arch (amd64/arm64) build with GHA layer cache, SBOM and provenance attestations. Pushes to GHCR on `main` (`latest`, `<agent-version>`, `sha-<commit>`); pull requests only build and smoke-test.
 - **Dependabot**: weekly updates for the Docker base image and GitHub Actions.
 - **Update Cursor Agent** (`update-cursor-agent.yml`): daily check of the latest release; opens a PR bumping the version and checksums via `scripts/update-cursor-agent.sh`. Merging it publishes a new `<agent-version>` tag.
 
