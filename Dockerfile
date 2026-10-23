@@ -76,9 +76,19 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         ca-certificates \
         curl \
+        diffutils \
+        file \
+        findutils \
         git \
         jq \
+        less \
         openssh-client \
+        patch \
+        procps \
+        python3 \
+        tree \
+        unzip \
+        xz-utils \
     && useradd --create-home --uid 1000 --shell /bin/bash cursor \
     && install -d -o cursor -g cursor /workspace
 

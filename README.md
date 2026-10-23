@@ -55,6 +55,12 @@ docker build -t cursor .
 docker run --rm cursor --version
 ```
 
+## What's installed
+
+The Cursor Agent CLI (with its bundled `rg`), plus `git`, `curl`, `jq`, `openssh-client`, `python3` (standard library only),
+and basic utilities: `less`, `file`, `tree`, `diffutils`, `patch`, `findutils`, `unzip`, `xz-utils`, `procps`.
+Need more (Node, Go, compilers, ...)? Build a downstream image with `FROM ghcr.io/kalex3/cursor:latest`.
+
 ## What's pinned
 
 | Component | How |
