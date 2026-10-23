@@ -1,0 +1,11 @@
+---
+description: Dockerfile and Compose conventions
+globs: **/Dockerfile*,**/*.dockerfile,**/compose*.y*ml,**/docker-compose*.y*ml
+alwaysApply: false
+---
+- Pin base images by tag and digest; pin downloaded artifacts and verify checksums.
+- Multi-stage builds; order layers from least to most frequently changing; use BuildKit cache mounts for package managers.
+- Run as a non-root user with a numeric UID; no secrets in image layers or build args.
+- Keep the image minimal: `--no-install-recommends`, no leftover caches or build tools in the final stage.
+- Must work with both Docker and Podman; avoid Docker-only features unless necessary.
+- Lint Dockerfiles with `hadolint`.

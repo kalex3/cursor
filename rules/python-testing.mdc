@@ -1,0 +1,11 @@
+---
+description: pytest conventions for Python code
+globs: **/test_*.py,**/*_test.py,**/tests/**/*.py
+alwaysApply: false
+---
+- Tests live in `tests/` and use `pytest` (plain `assert`, fixtures, `parametrize`); no `unittest.TestCase`.
+- Every numeric assertion states its unit and tolerance (`pytest.approx(x, rel=..., abs=...)`); never compare floats with `==`.
+- Use small, fixed fixtures checked into the repo. No network, no wall-clock time, no unseeded randomness.
+- Cover edge cases, not just the happy path: empty input, single row, DST transitions, NaNs, boundary values. No cap on test count.
+- Don't import private pytest internals (`_pytest.*`).
+- A bug fix starts with a failing test that reproduces it.
