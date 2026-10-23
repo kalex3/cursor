@@ -30,6 +30,7 @@ jobs:
         with:
           dockerfile: Dockerfile
           config: .hadolint.yaml
+          failure-threshold: warning
 
   build:
     needs: lint

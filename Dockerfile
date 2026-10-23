@@ -24,6 +24,8 @@ RUN rm -f /etc/apt/apt.conf.d/docker-clean \
 # ---------------------------------------------------------------------------
 FROM base AS fetch
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # hadolint ignore=DL3008
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -60,6 +62,8 @@ EOF
 # ---------------------------------------------------------------------------
 FROM base AS runtime
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 ENV LANG=C.UTF-8 \
     TERM=xterm-256color
 
@@ -78,7 +82,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 
 COPY --from=fetch --chown=cursor:cursor /opt/cursor-agent /home/cursor/.local/share/cursor-agent/versions
 
-USER cursor
+USER 1000:1000
 WORKDIR /home/cursor
 
 # Mirror the layout created by the official installer (agent + cursor-agent symlinks).
