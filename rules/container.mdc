@@ -8,7 +8,7 @@ alwaysApply: true
 - You are running inside a minimal Debian container as the non-root user `cursor` (UID 1000).
 - The project is mounted at `/workspace`; only changes under `/workspace` persist.
 - Available tools: `git`, `gh` (GitHub CLI; authenticated only if the user passed `GH_TOKEN`, check with `gh auth status`), `rg` (ripgrep), `curl`, `jq`, `ssh`, `pup` (CSS-selector HTML parser, e.g. `curl -s URL | pup 'a attr{href}'`), `python3` (standard library only), and basic utilities
-  (`less`, `file`, `tree`, `diff`, `patch`, `find`, `od` for hex dumps, `unzip`, `zip`, `bzip2`, `xz`, `ps`, `make`) and network diagnostics (`ip`, `dig`; `ping` only works if the user granted `NET_RAW`, so prefer `curl -v` or `dig` to check connectivity).
+  (`less`, `file`, `tree`, `diff`, `patch`, `find`, `xxd`, `hexdump`/`hd`, `od` for hex dumps, `unzip`, `zip`, `bzip2`, `xz`, `ps`, `make`) and network diagnostics (`ip`, `dig`; `ping` only works if the user granted `NET_RAW`, so prefer `curl -v` or `dig` to check connectivity).
   There is no `pip`, `uv`, venv support, compilers, or other language runtimes, and the container has no `sudo`.
   Use the Python standard library for throwaway scripts; if something else is needed, tell the user instead of trying to install it.
 - User-level rules and subagents live in `~/.cursor/rules` and `~/.cursor/agents`. They are usually mounted **read-only** from the user's git repo; don't try to edit them.
