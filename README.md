@@ -85,7 +85,8 @@ docker run --rm cursor --version
 ## What's installed
 
 The Cursor Agent CLI (with its bundled `rg`), plus `git`, `curl`, `gh` (GitHub CLI), `ripgrep`, `jq`, `pup`, `openssh-client`, `python3` (standard library only),
-and basic utilities: `less`, `file`, `tree`, `diffutils`, `patch`, `findutils`, `unzip`, `xz-utils`, `procps`.
+and basic utilities: `less`, `file`, `tree`, `diffutils`, `patch`, `findutils`, `unzip`, `zip`, `bzip2`, `xz-utils`, `procps`, `make`,
+and network diagnostics (`iproute2`, `iputils-ping`, `bind9-dnsutils`). `ping` needs the `NET_RAW` capability (see `compose.yaml`).
 `gh` comes from Debian's package (currently 2.46, older than upstream) and only works if you set `GH_TOKEN` (see `.env.example`;
 use a fine-grained, repo-scoped token, since anything the agent runs can read it). Need more (Node, Go, compilers, ...)? Build a downstream image with `FROM ghcr.io/kalex3/cursor:latest`.
 
