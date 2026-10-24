@@ -75,6 +75,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         bind9-dnsutils \
+        bsdextrautils \
         bzip2 \
         ca-certificates \
         curl \
@@ -96,6 +97,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         ripgrep \
         tree \
         unzip \
+        xxd \
         xz-utils \
         zip \
     && useradd --create-home --uid 1000 --shell /bin/bash cursor \
