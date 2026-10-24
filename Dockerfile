@@ -97,6 +97,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         ripgrep \
         tree \
         unzip \
+        wget \
         xxd \
         xz-utils \
         zip \
