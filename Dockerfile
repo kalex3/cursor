@@ -79,6 +79,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         diffutils \
         file \
         findutils \
+        gh \
         git \
         jq \
         less \
@@ -87,6 +88,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         procps \
         pup \
         python3 \
+        ripgrep \
         tree \
         unzip \
         xz-utils \
