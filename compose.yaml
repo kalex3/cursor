@@ -1,5 +1,8 @@
-# Example: run Cursor Agent against a local workspace.
+# Example: run Cursor Agent against a local workspace, with ALL of its network
+# traffic forced through a WireGuard tunnel (the `wg` service, see
+# https://github.com/kalex3/wg).
 #
+#   cp wg0.conf.example wg0.conf       # from the wg repo; fill in keys/peers, chmod 600
 #   cp .env.example .env               # then set CURSOR_API_KEY (or `export CURSOR_API_KEY=...`)
 #   docker compose run --rm cursor     # interactive session
 #   docker compose run --rm cursor -p "explain this repo"
@@ -9,6 +12,14 @@ services:
     image: ghcr.io/kalex3/cursor:latest # pin the agent version (e.g. :2026.10.22-27dcf5f) or a digest for reproducibility
     pull_policy: always
     init: true # tini as PID 1: forwards signals and reaps zombie processes
+    # Share wg's network namespace: every packet the agent sends leaves through the tunnel.
+    # Network settings (e.g. published ports) belong to the `wg` service, not here.
+    # To run without a VPN, delete this line, `depends_on`, and the `wg` service.
+    network_mode: service:wg
+    depends_on:
+      wg:
+        condition: service_healthy # wait for the tunnel to be up
+        restart: true # recreate this container when wg restarts, otherwise it keeps a stale netns
     stdin_open: true
     tty: true
     working_dir: /workspace
@@ -33,6 +44,39 @@ services:
       # Persist agent login/config/state between runs.
       - cursor-state:/home/cursor/.cursor
       - cursor-config:/home/cursor/.config/cursor
+
+  # WireGuard sidecar from https://github.com/kalex3/wg. Needs the `wireguard` kernel module on the host.
+  # Traffic only goes through the tunnel for destinations in the peers' AllowedIPs: use
+  # `AllowedIPs = 0.0.0.0/0` (and the optional kill switch in the wg repo's example config) to force everything.
+  wg:
+    image: ghcr.io/kalex3/wg:latest # pin a sha-<commit> tag or a digest for reproducibility
+    pull_policy: always
+    restart: unless-stopped
+    init: true
+    tmpfs:
+      - /run
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_ADMIN
+    security_opt:
+      - no-new-privileges:true
+    sysctls:
+      # Only used by wg-quick for full-tunnel configs (AllowedIPs = 0.0.0.0/0).
+      - net.ipv4.conf.all.src_valid_mark=1
+    pids_limit: 128
+    mem_limit: 128m
+    volumes:
+      # Contains your private key: git-ignored, keep it chmod 600. With rootful Docker and
+      # cap_drop: ALL it must be owned by root (`sudo chown root:root wg0.conf`).
+      - ${WG_CONFIG:-./wg0.conf}:/etc/wireguard/wg0.conf:ro
+    # Declared here too because Podman drops the image's HEALTHCHECK for OCI-format images.
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
 
 volumes:
   cursor-state:
