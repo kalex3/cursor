@@ -31,6 +31,8 @@ services:
       # Passed through from your shell or from .env (see .env.example); not set in the container if undefined.
       CURSOR_API_KEY:
       NO_OPEN_BROWSER: ${NO_OPEN_BROWSER:-1}
+      # Optional: lets `gh` (and `git` after `gh auth setup-git`) talk to GitHub. Use a fine-grained, repo-scoped token.
+      GH_TOKEN:
     volumes:
       # Your project (read-write).
       - ./workspace:/workspace
