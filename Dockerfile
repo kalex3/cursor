@@ -74,6 +74,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bind9-dnsutils \
+        bzip2 \
         ca-certificates \
         curl \
         diffutils \
@@ -81,8 +83,11 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         findutils \
         gh \
         git \
+        iproute2 \
+        iputils-ping \
         jq \
         less \
+        make \
         openssh-client \
         patch \
         procps \
@@ -92,6 +97,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         tree \
         unzip \
         xz-utils \
+        zip \
     && useradd --create-home --uid 1000 --shell /bin/bash cursor \
     && install -d -o cursor -g cursor /workspace
 

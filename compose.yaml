@@ -20,6 +20,9 @@ services:
       wg:
         condition: service_healthy # wait for the tunnel to be up
         restart: true # recreate this container when wg restarts, otherwise it keeps a stale netns
+    # Uncomment only if you need `ping` inside the container (it needs raw sockets):
+    # cap_add:
+    #   - NET_RAW
     stdin_open: true
     tty: true
     working_dir: /workspace
