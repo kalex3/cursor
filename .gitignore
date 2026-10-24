@@ -5,3 +5,5 @@ workspace/*
 !workspace/README.md
 proposals/*
 !proposals/README.md
+# WireGuard config contains a private key
+wg*.conf

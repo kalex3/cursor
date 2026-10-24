@@ -59,6 +59,22 @@ only the behaviour rules (`anti-sycophancy`, `anti-overengineering`) and `contai
 Some are adapted from [awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules) (CC0-1.0).
 Subagents: `verifier`, `code-reviewer`, `security-auditor`, `model-auditor`, `test-writer`, `shell-reviewer`.
 
+### Routing the agent through WireGuard
+
+The compose example also starts [`ghcr.io/kalex3/wg`](https://github.com/kalex3/wg) and runs the agent with
+`network_mode: service:wg`, so all of the agent's traffic (and DNS) leaves through the tunnel. Setup:
+
+```sh
+curl -fsSLO https://raw.githubusercontent.com/kalex3/wg/main/wg0.conf.example
+cp wg0.conf.example wg0.conf && chmod 600 wg0.conf   # fill in keys/peers (git-ignored)
+docker compose run --rm cursor                        # starts wg, waits until healthy, then the agent
+docker compose down                                   # also stops the wg sidecar
+```
+
+Use `AllowedIPs = 0.0.0.0/0` in the config to force *everything* through the tunnel (only destinations covered by
+`AllowedIPs` are tunnelled otherwise); the wg repo's example also has an optional kill switch.
+The host needs the `wireguard` kernel module. To run without a VPN, remove `network_mode`, `depends_on` and the `wg` service.
+
 ### Build locally
 
 ```sh
