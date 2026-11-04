@@ -12,7 +12,10 @@ alwaysApply: true
   There is no `pip`, `uv`, venv support, compilers, or other language runtimes, and the container has no `sudo`.
   Use the Python standard library for throwaway scripts.
 - **Missing a tool?** You cannot install packages yourself. First check `command -v <tool>` and whether an installed tool already does the job.
-  If you really need a Debian package, ask the user for a *temporary* install: name the package (Debian 13 "trixie"), say why, and give this exact command
+  If you really need a Debian package, first find its exact name yourself (the container has no apt lists, so `apt-cache` is empty): use web search, open
+  `https://packages.debian.org/trixie/<package>`, or search the package index (fast, no root needed):
+  `curl -fsSL https://deb.debian.org/debian/dists/trixie/main/binary-$(dpkg --print-architecture)/Packages.xz | xz -dc | awk -v RS= -v pat='<keyword>' 'tolower($0) ~ pat {m=split($0,L,"\n"); for(i=1;i<=m;i++){if(L[i]~/^Package: /)n=substr(L[i],10); if(L[i]~/^Description: /)d=substr(L[i],14)} print n" - "d}'`
+  Then ask the user for a *temporary* install: name the package (Debian 13 "trixie"), say why, and give this exact command
   (the container is named `cursor` when started as `docker compose run --rm --name cursor cursor`; the user adjusts the name otherwise):
   `docker exec -u root cursor sh -c 'apt-get update && apt-get install -y --no-install-recommends <package>'`
   Ask for the smallest set in one request, keep working on what you can meanwhile, and verify with `command -v <tool>` once the user confirms.
