@@ -75,6 +75,20 @@ Use `AllowedIPs = 0.0.0.0/0` in the config to force *everything* through the tun
 `AllowedIPs` are tunnelled otherwise); the wg repo's example also has an optional kill switch.
 The host needs the `wireguard` kernel module. To run without a VPN, remove `network_mode`, `depends_on` and the `wg` service.
 
+### Installing extra tools temporarily
+
+The agent runs as the unprivileged `cursor` user and can't install packages. When it needs one, its rules make it ask you for a
+temporary install, which you grant from the host with a root `exec` into the running container (start it with a fixed name):
+
+```sh
+docker compose run --rm --name cursor cursor                  # terminal 1: the agent
+docker exec -u root cursor sh -c 'apt-get update && apt-get install -y --no-install-recommends jq'   # terminal 2: what the agent asked for
+```
+
+`-u root` overrides the image's `USER`, and no `sudo` is needed. Installed packages live in that container's writable layer:
+they survive a restart but disappear when the container is removed (so always with `--rm`). With the WireGuard sidecar,
+`apt` goes through the tunnel too. To make a tool permanent, add it to the `Dockerfile` or build a downstream image.
+
 ### Build locally
 
 ```sh

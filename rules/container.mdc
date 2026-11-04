@@ -10,7 +10,13 @@ alwaysApply: true
 - Available tools: `git`, `gh` (GitHub CLI; authenticated only if the user passed `GH_TOKEN`, check with `gh auth status`), `rg` (ripgrep), `curl`, `wget` (e.g. recursive downloads with `-r`/`-R`), `jq`, `ssh`, `pup` (CSS-selector HTML parser, e.g. `curl -s URL | pup 'a attr{href}'`), `python3` (standard library only), and basic utilities
   (`less`, `file`, `tree`, `diff`, `patch`, `find`, `xxd`, `hexdump`/`hd`, `od` for hex dumps, `unzip`, `zip`, `bzip2`, `xz`, `ps`, `make`) and network diagnostics (`ip`, `dig`; `ping` only works if the user granted `NET_RAW`, so prefer `curl -v` or `dig` to check connectivity).
   There is no `pip`, `uv`, venv support, compilers, or other language runtimes, and the container has no `sudo`.
-  Use the Python standard library for throwaway scripts; if something else is needed, tell the user instead of trying to install it.
+  Use the Python standard library for throwaway scripts.
+- **Missing a tool?** You cannot install packages yourself. First check `command -v <tool>` and whether an installed tool already does the job.
+  If you really need a Debian package, ask the user for a *temporary* install: name the package (Debian 13 "trixie"), say why, and give this exact command
+  (the container is named `cursor` when started as `docker compose run --rm --name cursor cursor`; the user adjusts the name otherwise):
+  `docker exec -u root cursor sh -c 'apt-get update && apt-get install -y --no-install-recommends <package>'`
+  Ask for the smallest set in one request, keep working on what you can meanwhile, and verify with `command -v <tool>` once the user confirms.
+  Installed packages vanish when the container is removed, so never assume a tool from an earlier session exists; check each time.
 - User-level rules and subagents live in `~/.cursor/rules` and `~/.cursor/agents`. They are usually mounted **read-only** from the user's git repo; don't try to edit them.
   To suggest a new or changed rule/subagent, write the **complete file** to `~/proposals/rules/<name>.mdc` or `~/proposals/agents/<name>.md`
   (use the same file name to propose a change to an existing one) and tell the user what you proposed and why. The user reviews and merges proposals by hand.
