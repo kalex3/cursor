@@ -25,7 +25,6 @@ The container runs as UID 1000 (`cursor`). To persist login/config between runs,
 | Tag | Meaning |
 | --- | --- |
 | `latest` | Latest build of `main` |
-| `<agent-version>` (e.g. `2026.10.22-27dcf5f`) | Build of `main` with that Cursor Agent version; refreshed if only the base image changes |
 | `sha-<commit>` | Immutable build of a specific commit |
 
 For fully reproducible setups pin by digest (`ghcr.io/kalex3/cursor@sha256:...`).
@@ -110,15 +109,15 @@ use a fine-grained, repo-scoped token, since anything the agent runs can read it
 | --- | --- |
 | Base image | `debian:13.7-slim` + digest (Dependabot) |
 | Dockerfile frontend | `docker/dockerfile` tag + digest |
-| Cursor Agent CLI | Exact version + per-arch SHA-256, verified at build time; also published as an image tag |
+| Cursor Agent CLI | Exact version + per-arch SHA-256, verified at build time |
 | GitHub Actions | Full commit SHAs (Dependabot) |
 | apt packages | Not pinned (Debian drops old versions); reproducibility comes from the base digest |
 
 ## Automation
 
-- **CI** (`ci.yml`): hadolint, multi-arch (amd64/arm64) build with GHA layer cache, SBOM and provenance attestations. Pushes to GHCR on `main` (`latest`, `<agent-version>`, `sha-<commit>`); pull requests only build and smoke-test.
+- **CI** (`ci.yml`): hadolint, multi-arch (amd64/arm64) build with GHA layer cache, SBOM and provenance attestations. Pushes to GHCR on `main` (`latest`, `sha-<commit>`); pull requests only build and smoke-test.
 - **Dependabot**: weekly updates for the Docker base image and GitHub Actions.
-- **Update Cursor Agent** (`update-cursor-agent.yml`): daily check of the latest release; opens a PR bumping the version and checksums via `scripts/update-cursor-agent.sh`. Merging it publishes a new `<agent-version>` tag.
+- **Update Cursor Agent** (`update-cursor-agent.yml`): daily check of the latest release; opens a PR bumping the version and checksums via `scripts/update-cursor-agent.sh`. Merging it commits the new pin on `main`.
 
 ## Layer caching
 
