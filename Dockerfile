@@ -10,7 +10,7 @@ ARG CURSOR_AGENT_SHA256_ARM64=22a36df9720830668ccd4d707e5190204ab9c8a0efb2f068cc
 # Base: Debian 13 (trixie) slim, pinned by tag and digest (Dependabot bumps both).
 # apt is configured to keep downloaded .debs so BuildKit cache mounts are effective.
 # ---------------------------------------------------------------------------
-FROM debian:13.7-slim@sha256:62bd423aeee912639ca8ee681c2b762cb3e25137e0a92b20be455898a9f034ad AS base
+FROM debian:13.7-slim@sha256:a72b4433de1cf7d6bae0c4cee74d0547f58601a643b3375f070c51600d63b6b2 AS base
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
