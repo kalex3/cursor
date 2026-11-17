@@ -9,7 +9,7 @@
 #
 services:
   cursor:
-    image: ghcr.io/kalex3/cursor:latest # pin the agent version (e.g. :2026.10.22-27dcf5f) or a digest for reproducibility
+    image: ghcr.io/kalex3/cursor:latest # pin a sha-<commit> tag or a digest for reproducibility
     pull_policy: always
     init: true # tini as PID 1: forwards signals and reaps zombie processes
     # Share wg's network namespace: every packet the agent sends leaves through the tunnel.
