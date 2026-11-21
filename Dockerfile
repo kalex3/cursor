@@ -2,9 +2,9 @@
 
 # Version + checksums are bumped by scripts/update-cursor-agent.sh
 # (run daily by .github/workflows/update-cursor-agent.yml).
-ARG CURSOR_AGENT_VERSION=2026.11.17-f532c45
-ARG CURSOR_AGENT_SHA256_X64=189ed41d8963cd22dcdafbbd62f072cc55ac08374c922dbd04aee525f4018ab6
-ARG CURSOR_AGENT_SHA256_ARM64=dff929e5e5ace2ced880290095df5938545267d73fd1d84be669be75dbdc1558
+ARG CURSOR_AGENT_VERSION=2026.11.19-f005e9d
+ARG CURSOR_AGENT_SHA256_X64=a25986eaf0c9330aeeec599a139711cb9f267c64562d073a72b751edf5161695
+ARG CURSOR_AGENT_SHA256_ARM64=5ff05be0d7c0b7754574dbcd677c35254a3ff190ed6457e71bbee0f276237e29
 
 # ---------------------------------------------------------------------------
 # Base: Debian 13 (trixie) slim, pinned by tag and digest (Dependabot bumps both).
