@@ -3,6 +3,7 @@
 # see https://github.com/kalex3/wg). The image entrypoint is `agent`.
 #
 #   cp wg0.conf.example wg0.conf       # from the wg repo; fill in keys/peers, chmod 600
+#   cp resolv.conf.example resolv.conf # same repo; the entrypoint fills it from DNS=
 #   cp .env.example .env               # then set CURSOR_API_KEY (or `export CURSOR_API_KEY=...`)
 #   docker compose up -d               # worker stays up
 #   docker compose down
@@ -42,6 +43,8 @@ services:
       # Optional: lets `gh` (and `git` after `gh auth setup-git`) talk to GitHub. Use a fine-grained, repo-scoped token.
       GH_TOKEN:
     volumes:
+      # Same file wg writes. Read-only so this container cannot change the resolver.
+      - ./resolv.conf:/etc/resolv.conf:ro
       # Your project (read-write).
       - ./workspace:/workspace
       # User-level rules and subagents (apply to every project), mounted from this repo.
@@ -87,6 +90,9 @@ services:
       # Contains your private key: git-ignored, keep it chmod 600. With rootful Docker and
       # cap_drop: ALL it must be owned by root (`sudo chown root:root wg0.conf`).
       - ./wg0.conf:/etc/wg0.conf:ro
+      # Same file in every container that joins this network namespace.
+      # Podman would share its own resolv.conf; Docker and nerdctl would not.
+      - ./resolv.conf:/etc/resolv.conf
     # Defined here as well, because Podman drops the image's HEALTHCHECK for
     # OCI-format images (e.g. when pulled from GHCR).
     healthcheck:

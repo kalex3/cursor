@@ -78,7 +78,9 @@ The compose example also starts [`ghcr.io/kalex3/wg`](https://github.com/kalex3/
 
 ```sh
 curl -fsSLO https://raw.githubusercontent.com/kalex3/wg/main/wg0.conf.example
+curl -fsSLO https://raw.githubusercontent.com/kalex3/wg/main/resolv.conf.example
 cp wg0.conf.example wg0.conf && chmod 600 wg0.conf   # fill in keys/peers (git-ignored)
+cp resolv.conf.example resolv.conf
 docker compose up -d                                 # starts wg, waits until healthy, then the worker
 docker compose down                                   # also stops the wg sidecar
 ```
