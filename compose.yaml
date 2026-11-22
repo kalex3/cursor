@@ -1,15 +1,20 @@
-# Example: run a self-hosted Cloud Agent machine against a local workspace, with
-# ALL of its network traffic forced through a WireGuard tunnel (the `wg` service,
-# see https://github.com/kalex3/wg). The image entrypoint is `agent`.
+# Example: run a self-hosted Cloud Agent machine against a local workspace. Its
+# traffic goes through a WireGuard tunnel (the `wg` service, see
+# https://github.com/kalex3/wg) for destinations in the peers' AllowedIPs.
+# `WG_KILLSWITCH: "true"` below rejects the rest when that list is a full tunnel.
+# The image entrypoint is `agent`.
 #
 #   cp wg0.conf.example wg0.conf       # from the wg repo; fill in keys/peers, chmod 600
-#   cp resolv.conf.example resolv.conf # same repo; the entrypoint fills it from DNS=
+#   cp resolv.conf.example resolv.conf # from the wg repo; the entrypoint fills it from DNS=
 #   cp .env.example .env               # then set CURSOR_API_KEY (or `export CURSOR_API_KEY=...`)
 #   docker compose up -d               # worker stays up
 #   docker compose down
 #
-# One-off interactive session (replaces `worker start`; the entrypoint stays `agent`):
+# One-off interactive session. Stop the worker first: both use the state volumes
+# below, and two agents writing them at once corrupt the CLI state.
+#   docker compose stop cursor
 #   docker compose run --rm -it cursor -p "explain this repo"
+#   docker compose start cursor
 #
 services:
   cursor:
@@ -57,7 +62,7 @@ services:
       # Writable inbox where the agent proposes new/changed rules and agents (see proposals/README.md).
       # You review and merge by hand: `diff -ru rules proposals/rules`.
       - ./proposals:/home/cursor/proposals
-      # Persist agent login/config/state between runs.
+      # Persist agent login/config/state between runs. One agent at a time.
       - cursor-state:/home/cursor/.cursor
       - cursor-config:/home/cursor/.config/cursor
 
@@ -74,6 +79,10 @@ services:
       - NET_ADMIN
     security_opt:
       - no-new-privileges:true
+    # Compose defaults this to 0. Rootless Podman then fails every healthcheck
+    # exec on crun 1.31, because the systemd unit that runs it cannot lower
+    # its own oom score to 0. 200 is the score Podman already applies.
+    oom_score_adj: 200
     environment:
       # Interface name. The volume below mounts ./wg0.conf at /etc/wg0.conf.
       WG_INTERFACE: wg0

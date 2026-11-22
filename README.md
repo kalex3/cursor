@@ -61,7 +61,13 @@ cp .env.example .env   # set CURSOR_API_KEY (Dashboard -> API Keys), or leave it
 docker compose up -d   # `agent worker start`: a self-hosted Cloud Agent machine
 ```
 
-A one-off interactive session replaces that command: `docker compose run --rm -it cursor -p "explain this repo"`.
+A one-off interactive session uses the same state volumes, so stop the worker first:
+
+```sh
+docker compose stop cursor
+docker compose run --rm -it cursor -p "explain this repo"
+docker compose start cursor
+```
 
 Edit or add `.mdc` files in `rules/` and `.md` files in `agents/` to taste. Rules are kept small on purpose:
 the always-on rules are `anti-sycophancy`, `anti-overengineering`, `container`, `karpathy-guidelines`, `leave-commits`, and `no-ai-attribution`; the rest attach by file glob
@@ -74,7 +80,7 @@ Skills: `karpathy-guidelines`, `ask-questions-if-underspecified`, `systematic-de
 ### Routing the agent through WireGuard
 
 The compose example also starts [`ghcr.io/kalex3/wg`](https://github.com/kalex3/wg) and runs the agent with
-`network_mode: service:wg`, so all of the agent's traffic (and DNS) leaves through the tunnel. Setup:
+`network_mode: service:wg`, so traffic to destinations in the peers' `AllowedIPs` leaves through the tunnel. Setup:
 
 ```sh
 curl -fsSLO https://raw.githubusercontent.com/kalex3/wg/main/wg0.conf.example

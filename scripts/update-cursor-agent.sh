@@ -27,9 +27,21 @@ tmp="$(mktemp -d)"
 trap 'rm -rf "${tmp}"' EXIT
 
 sha256_for() {
-  curl -fsSL --retry 5 --retry-all-errors \
-    "${base_url}/${version}/linux/$1/agent-cli-package.tar.gz" -o "${tmp}/$1.tar.gz"
-  sha256sum "${tmp}/$1.tar.gz" | cut -d' ' -f1
+  local arch=$1 published actual
+  local url="${base_url}/${version}/linux/${arch}/agent-cli-package.tar.gz"
+  curl -fsSL --retry 5 --retry-all-errors "${url}.sha256" -o "${tmp}/${arch}.sha256"
+  curl -fsSL --retry 5 --retry-all-errors "${url}" -o "${tmp}/${arch}.tar.gz"
+  published="$(awk 'NR==1 { print $1 }' "${tmp}/${arch}.sha256")"
+  [[ "${published}" =~ ^[0-9a-f]{64}$ ]] || {
+    echo "published checksum for ${arch} is not 64 hex chars" >&2
+    exit 1
+  }
+  actual="$(sha256sum "${tmp}/${arch}.tar.gz" | awk '{ print $1 }')"
+  [[ "${published}" == "${actual}" ]] || {
+    echo "checksum mismatch for ${arch}" >&2
+    exit 1
+  }
+  printf '%s\n' "${published}"
 }
 
 x64="$(sha256_for x64)"
