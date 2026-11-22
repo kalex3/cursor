@@ -16,6 +16,15 @@ docker run --rm -it \
 ```
 
 Arguments are passed to `agent`, e.g. `... ghcr.io/kalex3/cursor:latest -p "explain this repo"`.
+Passing `worker start` runs a [self-hosted Cloud Agent machine](https://cursor.com/docs/cloud-agent/self-hosted): the entrypoint is `agent`, so this is `agent worker start`, and the container stays up for Cursor to send it tool calls.
+
+```sh
+docker run -d --name cursor-worker \
+  -e CURSOR_API_KEY \
+  -v "$PWD":/workspace \
+  ghcr.io/kalex3/cursor:latest \
+  worker start
+```
 
 The container runs as UID 1000 (`cursor`). To persist login/config between runs, mount a volume at `/home/cursor/.cursor`
 (and `/home/cursor/.config/cursor`). Files created in a bind mount are owned by UID 1000.
@@ -49,8 +58,10 @@ The image itself ships `container.mdc` (what's installed in the container) as a 
 
 ```sh
 cp .env.example .env   # set CURSOR_API_KEY (Dashboard -> API Keys), or leave it and run `agent login` in the container
-docker compose run --rm cursor
+docker compose up -d   # `agent worker start`: a self-hosted Cloud Agent machine
 ```
+
+A one-off interactive session replaces that command: `docker compose run --rm -it cursor -p "explain this repo"`.
 
 Edit or add `.mdc` files in `rules/` and `.md` files in `agents/` to taste. Rules are kept small on purpose:
 the always-on rules are `anti-sycophancy`, `anti-overengineering`, `container`, `karpathy-guidelines`, `leave-commits`, and `no-ai-attribution`; the rest attach by file glob
@@ -68,7 +79,7 @@ The compose example also starts [`ghcr.io/kalex3/wg`](https://github.com/kalex3/
 ```sh
 curl -fsSLO https://raw.githubusercontent.com/kalex3/wg/main/wg0.conf.example
 cp wg0.conf.example wg0.conf && chmod 600 wg0.conf   # fill in keys/peers (git-ignored)
-docker compose run --rm cursor                        # starts wg, waits until healthy, then the agent
+docker compose up -d                                 # starts wg, waits until healthy, then the worker
 docker compose down                                   # also stops the wg sidecar
 ```
 
@@ -79,15 +90,14 @@ The host needs the `wireguard` kernel module. To run without a VPN, remove `netw
 ### Installing extra tools temporarily
 
 The agent runs as the unprivileged `cursor` user and can't install packages. When it needs one, its rules make it ask you for a
-temporary install, which you grant from the host with a root `exec` into the running container (start it with a fixed name):
+temporary install, which you grant from the host with a root `exec` into the running service:
 
 ```sh
-docker compose run --rm --name cursor cursor                  # terminal 1: the agent
-docker exec -u root cursor sh -c 'apt-get update && apt-get install -y --no-install-recommends jq'   # terminal 2: what the agent asked for
+docker compose exec -u root cursor sh -c 'apt-get update && apt-get install -y --no-install-recommends jq'
 ```
 
 `-u root` overrides the image's `USER`, and no `sudo` is needed. Installed packages live in that container's writable layer:
-they survive a restart but disappear when the container is removed (so always with `--rm`). With the WireGuard sidecar,
+they survive a restart but disappear when the container is removed. With the WireGuard sidecar,
 `apt` goes through the tunnel too. To make a tool permanent, add it to the `Dockerfile` or build a downstream image.
 
 ### Build locally

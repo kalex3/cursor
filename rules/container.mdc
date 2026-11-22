@@ -16,8 +16,8 @@ alwaysApply: true
   `https://packages.debian.org/trixie/<package>`, or search the package index (fast, no root needed):
   `curl -fsSL https://deb.debian.org/debian/dists/trixie/main/binary-$(dpkg --print-architecture)/Packages.xz | xz -dc | awk -v RS= -v pat='<keyword>' 'tolower($0) ~ pat {m=split($0,L,"\n"); for(i=1;i<=m;i++){if(L[i]~/^Package: /)n=substr(L[i],10); if(L[i]~/^Description: /)d=substr(L[i],14)} print n" - "d}'`
   Then ask the user for a *temporary* install: name the package (Debian 13 "trixie"), say why, and give this exact command
-  (the container is named `cursor` when started as `docker compose run --rm --name cursor cursor`; the user adjusts the name otherwise):
-  `docker exec -u root cursor sh -c 'apt-get update && apt-get install -y --no-install-recommends <package>'`
+  (run it from the directory that contains `compose.yaml`):
+  `docker compose exec -u root cursor sh -c 'apt-get update && apt-get install -y --no-install-recommends <package>'`
   Ask for the smallest set in one request, keep working on what you can meanwhile, and verify with `command -v <tool>` once the user confirms.
   Installed packages vanish when the container is removed, so never assume a tool from an earlier session exists; check each time.
 - User-level rules, skills, and subagents live in `~/.cursor/rules`, `~/.cursor/skills`, and `~/.cursor/agents`. They are usually mounted **read-only**; don't try to edit them.
