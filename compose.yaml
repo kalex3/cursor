@@ -43,6 +43,9 @@ services:
       # Read-only: the agent can't change them, so injected text can't persist in them.
       - ./rules:/home/cursor/.cursor/rules:ro
       - ./agents:/home/cursor/.cursor/agents:ro
+      - ./skills:/home/cursor/.cursor/skills:ro
+      # CLI preferences (model, vim, allowlist). Read-only so a session cannot rewrite them.
+      - ./cli-config.json:/home/cursor/.config/cursor/cli-config.json:ro
       # Writable inbox where the agent proposes new/changed rules and agents (see proposals/README.md).
       # You review and merge by hand: `diff -ru rules proposals/rules`.
       - ./proposals:/home/cursor/proposals

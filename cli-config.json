@@ -1,0 +1,153 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(ls)"
+    ],
+    "deny": []
+  },
+  "version": 1,
+  "editor": {
+    "vimMode": true
+  },
+  "display": {
+    "showLineNumbers": false,
+    "showThinkingBlocks": false,
+    "showStatusIndicators": false,
+    "showStatusLineRunningTime": false,
+    "mode": "zen"
+  },
+  "notifications": true,
+  "hints": true,
+  "modelSlashCommands": true,
+  "steering": true,
+  "rewind": true,
+  "model": {
+    "modelId": "grok-4.7",
+    "displayModelId": "grok-4.7",
+    "displayName": "Grok 4.7 256K High Fast",
+    "displayNameShort": "Grok 4.7 256K High Fast",
+    "aliases": [],
+    "maxMode": false
+  },
+  "hasChangedDefaultModel": true,
+  "modelParameters": {
+    "default": [],
+    "grok-4.7": [
+      {
+        "id": "context",
+        "value": "256k"
+      },
+      {
+        "id": "reasoning_effort",
+        "value": "high"
+      },
+      {
+        "id": "fast",
+        "value": "true"
+      }
+    ],
+    "claude-sonnet-5-5": [
+      {
+        "id": "context",
+        "value": "300k"
+      },
+      {
+        "id": "reasoning_effort",
+        "value": "high"
+      }
+    ],
+    "claude-opus-5-5": [
+      {
+        "id": "context",
+        "value": "300k"
+      },
+      {
+        "id": "effort",
+        "value": "medium"
+      },
+      {
+        "id": "fast",
+        "value": "false"
+      }
+    ],
+    "claude-opus-4-8": [
+      {
+        "id": "thinking",
+        "value": "true"
+      },
+      {
+        "id": "context",
+        "value": "300k"
+      },
+      {
+        "id": "effort",
+        "value": "high"
+      },
+      {
+        "id": "fast",
+        "value": "false"
+      }
+    ],
+    "gpt-5.6-sol": [
+      {
+        "id": "context",
+        "value": "272k"
+      },
+      {
+        "id": "reasoning",
+        "value": "medium"
+      },
+      {
+        "id": "fast",
+        "value": "false"
+      }
+    ],
+    "gemini-4-argon": [
+      {
+        "id": "reasoning_effort",
+        "value": "medium"
+      }
+    ],
+    "muse-wonder-1.0": [
+      {
+        "id": "context",
+        "value": "300k"
+      },
+      {
+        "id": "reasoning_effort",
+        "value": "high"
+      }
+    ]
+  },
+  "selectedModel": {
+    "modelId": "grok-4.7",
+    "parameters": [
+      {
+        "id": "context",
+        "value": "256k"
+      },
+      {
+        "id": "reasoning_effort",
+        "value": "high"
+      },
+      {
+        "id": "fast",
+        "value": "true"
+      }
+    ]
+  },
+  "exploreSubagentModel": "default",
+  "network": {
+    "useHttp1ForAgent": false
+  },
+  "approvalMode": "allowlist",
+  "autoAcceptWebSearch": false,
+  "sandbox": {
+    "mode": "enabled",
+    "networkAccess": "user_config_with_defaults"
+  },
+  "attribution": {
+    "attributeCommitsToAgent": false,
+    "attributePRsToAgent": false
+  }
+}

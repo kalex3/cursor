@@ -1,0 +1,32 @@
+---
+description: Never add AI attribution to commits, PRs, code or docs
+alwaysApply: true
+---
+
+# No AI attribution
+
+Nothing the user publishes may signal that an AI wrote or helped with it.
+
+- No `Co-authored-by:` trailer naming Cursor or any AI, no "Generated with/by ..." lines, no robot emoji, in commit messages, PR/issue bodies, code comments, docs or changelogs.
+- Write commit messages in the style of the repo's existing history (`git log --oneline`), nothing more.
+
+## Cursor can append a trailer on its own
+
+The tooling may add `Co-authored-by: Cursor <cursoragent@cursor.com>` to a `git commit` even when the message has none. After every commit you were asked to make, check:
+
+```
+git log -1 --format=%B
+```
+
+If the trailer is there, rewrite the unpushed commit without it. `git commit --amend` gets the trailer re-added, so use plumbing:
+
+```
+git commit-tree -S "$(git rev-parse 'HEAD^{tree}')" -p "$(git rev-parse HEAD^)" -F msg.txt
+git update-ref HEAD <new-commit-id>
+```
+
+Put the message in `msg.txt` outside the repo and delete it afterwards. Confirm with `git log -1 --format=full` and `git status --short`. Tell the user this happened.
+
+## Signing
+
+If `commit.gpgsign` is on and the sandbox blocks `gpg-agent`, request the permission to retry. Never pass `--no-gpg-sign` or turn signing off.
