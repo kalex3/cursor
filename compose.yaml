@@ -55,36 +55,37 @@ services:
 
   # WireGuard sidecar from https://github.com/kalex3/wg. Needs the `wireguard` kernel module on the host.
   # Traffic only goes through the tunnel for destinations in the peers' AllowedIPs: use
-  # `AllowedIPs = 0.0.0.0/0` (and the optional kill switch in the wg repo's example config) to force everything.
+  # `AllowedIPs = 0.0.0.0/0` and `WG_KILLSWITCH: "true"` below to force everything.
   wg:
-    image: ghcr.io/kalex3/wg:latest # pin a sha-<commit> tag or a digest for reproducibility
+    image: ghcr.io/kalex3/wg:latest
     pull_policy: always
     restart: unless-stopped
-    init: true
-    tmpfs:
-      - /run
     cap_drop:
       - ALL
     cap_add:
       - NET_ADMIN
     security_opt:
       - no-new-privileges:true
+    environment:
+      # Interface name. The volume below mounts ./wg0.conf at /etc/wg0.conf.
+      WG_INTERFACE: wg0
+      # Seconds between endpoint re-resolution for stale hostname peers. 0 disables it.
+      WG_RERESOLVE_INTERVAL: "30"
+      # true rejects traffic that would bypass a full tunnel (0.0.0.0/0 or ::/0).
+      # A split tunnel ignores this. Replies to inbound connections are still allowed.
+      WG_KILLSWITCH: "false"
     sysctls:
-      # Only used by wg-quick for full-tunnel configs (AllowedIPs = 0.0.0.0/0).
+      # Used when a full tunnel marks packets. Harmless for a split tunnel:
+      # unmarked packets are looked up the same way either way.
       - net.ipv4.conf.all.src_valid_mark=1
-    pids_limit: 128
-    mem_limit: 128m
     volumes:
       # Contains your private key: git-ignored, keep it chmod 600. With rootful Docker and
       # cap_drop: ALL it must be owned by root (`sudo chown root:root wg0.conf`).
-      - ${WG_CONFIG:-./wg0.conf}:/etc/wireguard/wg0.conf:ro
-    # Declared here too because Podman drops the image's HEALTHCHECK for OCI-format images.
+      - ./wg0.conf:/etc/wg0.conf:ro
+    # Defined here as well, because Podman drops the image's HEALTHCHECK for
+    # OCI-format images (e.g. when pulled from GHCR).
     healthcheck:
       test: ["CMD", "/usr/local/bin/healthcheck"]
-      interval: 30s
-      timeout: 5s
-      start_period: 20s
-      retries: 3
 
 volumes:
   cursor-state:

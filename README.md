@@ -73,7 +73,7 @@ docker compose down                                   # also stops the wg sideca
 ```
 
 Use `AllowedIPs = 0.0.0.0/0` in the config to force *everything* through the tunnel (only destinations covered by
-`AllowedIPs` are tunnelled otherwise); the wg repo's example also has an optional kill switch.
+`AllowedIPs` are tunnelled otherwise). Set `WG_KILLSWITCH: "true"` on the `wg` service to reject traffic that would bypass that tunnel.
 The host needs the `wireguard` kernel module. To run without a VPN, remove `network_mode`, `depends_on` and the `wg` service.
 
 ### Installing extra tools temporarily
