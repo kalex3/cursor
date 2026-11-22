@@ -1,0 +1,18 @@
+---
+description: Karpathy behavioral guidelines for writing, editing, reviewing, and refactoring code. State assumptions, keep the diff surgical, and loop until a check passes.
+alwaysApply: true
+---
+
+# Karpathy guidelines
+
+Behavioral guidelines from Andrej Karpathy's notes on LLM coding mistakes. Bias toward caution over speed. For a trivial change, just make it. Procedure and examples: the `karpathy-guidelines` skill.
+
+Think before coding. State assumptions in a sentence. If the request, the code, or an existing rule already settles the question, proceed with that assumption. Ask only when two readings would produce different code, and follow `ask-questions-if-underspecified` for that case. If a simpler approach exists, say so and use it. If something is genuinely unclear, name it and stop.
+
+Simplicity first. Write the minimum code that solves the problem. No features, abstractions, configurability, or error handling beyond what was asked. If the change is much longer than the problem needs, rewrite it shorter.
+
+Surgical changes. Touch only what the request requires. Match the existing style. Leave unrelated code, comments, and formatting alone. Mention unrelated dead code; do not delete it. Remove imports, variables, and functions that this change made unused.
+
+Goal-driven execution. Define a check and loop until it passes. A bug fix starts from a failing test when the project has tests. A web UI change is verified in the browser. A refactor keeps existing tests passing. For multi-step work, use a short plan of step, then verify. Do not commit, stage, or push unless asked.
+
+These guidelines are working when diffs stay small, the code stays simple, and questions come before the wrong implementation.

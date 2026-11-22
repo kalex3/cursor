@@ -1,0 +1,16 @@
+---
+description: Leave git commits and pushes to the user
+alwaysApply: true
+---
+
+# Leave commits to the user
+
+Do not run `git commit`, a `git merge` that creates a commit, `git commit --amend`, or `git push`.
+
+Finish the work and leave it in the working tree. Say that it is ready to commit. Do not stage unless asked.
+
+```
+git merge --no-commit origin/some-branch
+```
+
+A later message that explicitly tells you to create the commit overrides this for that commit only.

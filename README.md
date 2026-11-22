@@ -32,15 +32,15 @@ For fully reproducible setups pin by digest (`ghcr.io/kalex3/cursor@sha256:...`)
 ### Docker Compose and rules
 
 `compose.yaml` is a ready-to-use example: it pulls the prebuilt image from GHCR, mounts `./workspace` at `/workspace`,
-mounts [`./rules`](rules) at `~/.cursor/rules` and [`./agents`](agents) at `~/.cursor/agents` (user-level rules and subagents,
-so they apply to every project and don't touch the workspace), and persists login/state in named volumes.
+mounts [`./rules`](rules) at `~/.cursor/rules`, [`./skills`](skills) at `~/.cursor/skills`, and [`./agents`](agents) at `~/.cursor/agents` (user-level rules, skills, and subagents,
+so they apply to every project and don't touch the workspace), mounts [`cli-config.json`](cli-config.json) over the CLI preferences, and persists login/state in named volumes.
 
-Rules and agents are mounted **read-only**: they apply to every future session, so letting the agent edit them directly would let text injected
+Rules, skills, and agents are mounted **read-only**: they apply to every future session, so letting the agent edit them directly would let text injected
 into one session (from a file or web page) persist. Instead, the agent can *propose* changes by writing complete files to
-`~/proposals/{rules,agents}/` (mounted from [`./proposals`](proposals)), which you review and merge by hand:
+`~/proposals/{rules,skills,agents}/` (mounted from [`./proposals`](proposals)), which you review and merge by hand:
 
 ```sh
-diff -ru rules proposals/rules; diff -ru agents proposals/agents   # review
+diff -ru rules proposals/rules; diff -ru skills proposals/skills; diff -ru agents proposals/agents   # review
 cp proposals/rules/some-rule.mdc rules/                            # accept (then commit)
 rm -r proposals/rules/some-rule.mdc                                 # discard
 ```
@@ -53,10 +53,12 @@ docker compose run --rm cursor
 ```
 
 Edit or add `.mdc` files in `rules/` and `.md` files in `agents/` to taste. Rules are kept small on purpose:
-only the behaviour rules (`anti-sycophancy`, `anti-overengineering`) and `container` always apply; the rest attach by file glob
+the always-on rules are `anti-sycophancy`, `anti-overengineering`, `container`, `karpathy-guidelines`, `leave-commits`, and `no-ai-attribution`; the rest attach by file glob
 (Python/pandas, pytest, energy modelling, time-series validation, security, shell, Go, Rust, TypeScript/React, Docker).
 Some are adapted from [awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules) (CC0-1.0).
 Subagents: `verifier`, `code-reviewer`, `security-auditor`, `model-auditor`, `test-writer`, `shell-reviewer`.
+Skills: `karpathy-guidelines`, `ask-questions-if-underspecified`, `systematic-debugging`, `web-design-guidelines`.
+`cli-config.json` sets vim mode, the Grok 4.7 256K High Fast default, an allowlist approval mode (only `Shell(ls)` is pre-approved), and turns commit and PR attribution off.
 
 ### Routing the agent through WireGuard
 
